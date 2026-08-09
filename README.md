@@ -1,15 +1,15 @@
-# Riskbridge_Tool
+# Riskbridge_tool_Tool
 
 **Explainable, business-aligned vulnerability prioritization and pre-CVE zero-day exposure modeling.**
 
-RiskBridge sits above vulnerability scanners and public threat-intelligence feeds. It combines technical severity,
+Riskbridge_tool sits above vulnerability scanners and public threat-intelligence feeds. It combines technical severity,
 exploitation likelihood, asset/business context, exposure, and compensating controls to answer a practical question:
 
 > **What should this organization fix first, why, and where is it exposed even before the next CVE is known?**
 
 ## What is different in this version
 
-RiskBridge v0.3 replaces the original Colab prototype with a maintainable Python package.
+Riskbridge_tool v0.3 replaces the original Colab prototype with a maintainable Python package.
 
 - No random/synthetic security values are used as fallback data.
 - Missing intelligence reduces decision confidence instead of being silently fabricated.
@@ -20,7 +20,7 @@ RiskBridge v0.3 replaces the original Colab prototype with a maintainable Python
 
 ## Data sources
 
-When `--live` is enabled, RiskBridge enriches CVEs from:
+When `--live` is enabled, Riskbridge_tool enriches CVEs from:
 
 - NIST NVD CVE API 2.0: `https://services.nvd.nist.gov/rest/json/cves/2.0`
 - FIRST EPSS API: `https://api.first.org/data/v1/epss`
@@ -33,7 +33,7 @@ EPSS probability and percentile are both used as threat signals.
 
 ### 1. Known vulnerability score
 
-RiskBridge calculates independent dimensions from 0-100:
+Riskbridge_tool calculates independent dimensions from 0-100:
 
 - **Technical severity** — CVSS
 - **Threat likelihood** — EPSS probability, EPSS percentile, CISA KEV
@@ -52,7 +52,7 @@ mathematically erasing severe exposure.
 
 ### 2. Emerging Vulnerability Score
 
-For disclosed CVEs, RiskBridge separately measures emerging risk using:
+For disclosed CVEs, Riskbridge_tool separately measures emerging risk using:
 
 - EPSS
 - EPSS percentile
@@ -82,7 +82,7 @@ The Streamlit dashboard contains:
 - Executive metrics
 - Risk-dimension radar chart
 - Priority distribution
-- EPSS vs RiskBridge scatter view
+- EPSS vs Riskbridge_tool scatter view
 - Prioritized vulnerability table
 - Highest-exposure radial gauge
 - Zero-day asset radar chart
@@ -93,7 +93,7 @@ The Streamlit dashboard contains:
 ## Repository structure
 
 ```text
-RiskBridge/
+Riskbridge_tool/
 ├── app.py
 ├── pyproject.toml
 ├── requirements.txt
@@ -109,7 +109,7 @@ RiskBridge/
 ├── examples/
 │   ├── findings.csv
 │   └── assets.csv
-├── src/riskbridge/
+├── src/Riskbridge_tool/
 │   ├── __init__.py
 │   ├── cli.py
 │   ├── intelligence.py
@@ -137,8 +137,8 @@ RiskBridge/
 ### Windows PowerShell
 
 ```powershell
-git clone https://github.com/YOUR-USERNAME/RiskBridge.git
-cd RiskBridge
+git clone https://github.com/YOUR-USERNAME/Riskbridge_tool.git
+cd Riskbridge_tool
 python -m venv riskenv
 .\riskenv\Scripts\Activate.ps1
 python -m pip install --upgrade pip
@@ -148,8 +148,8 @@ pip install -e .
 ### macOS / Linux
 
 ```bash
-git clone https://github.com/YOUR-USERNAME/RiskBridge.git
-cd RiskBridge
+git clone https://github.com/YOUR-USERNAME/Riskbridge_tool.git
+cd Riskbridge_tool
 python -m venv riskenv
 source riskenv/bin/activate
 python -m pip install --upgrade pip
@@ -161,13 +161,13 @@ pip install -e .
 Offline, using the included example data:
 
 ```bash
-riskbridge demo
+Riskbridge_tool demo
 ```
 
 With live NVD + EPSS + KEV enrichment:
 
 ```bash
-riskbridge demo --live
+Riskbridge_tool demo --live
 ```
 
 Outputs are written to `output/`:
@@ -175,8 +175,8 @@ Outputs are written to `output/`:
 - `prioritized_vulnerabilities.csv`
 - `zero_day_exposure.csv`
 - `remediation_optimizer.csv`
-- `riskbridge_report.xlsx`
-- `riskbridge_summary.json`
+- `Riskbridge_tool_report.xlsx`
+- `Riskbridge_tool_summary.json`
 
 ## Run the graphical dashboard
 
@@ -189,7 +189,7 @@ Then open the local URL Streamlit prints in your terminal.
 ## Analyze organization data
 
 ```bash
-riskbridge analyze \
+Riskbridge_tool analyze \
   --findings my_findings.csv \
   --assets my_assets.csv \
   --config config/default.yaml \
@@ -200,7 +200,7 @@ riskbridge analyze \
 Without internet enrichment:
 
 ```bash
-riskbridge analyze \
+Riskbridge_tool analyze \
   --findings my_findings.csv \
   --assets my_assets.csv \
   --output output
@@ -208,33 +208,33 @@ riskbridge analyze \
 
 ## Scanner strategy
 
-RiskBridge is intentionally vendor-neutral:
+Riskbridge_tool is intentionally vendor-neutral:
 
 ```text
 Qualys ─────┐
 Tenable ────┤
-Defender ───┼──> Normalized RiskBridge finding schema ──> scoring engine
+Defender ───┼──> Normalized Riskbridge_tool finding schema ──> scoring engine
 Rapid7 ─────┤
 CSV/JSON ───┘
 ```
 
-A scanner should find vulnerabilities. RiskBridge should determine how much the organization should care and why.
+A scanner should find vulnerabilities. Riskbridge_tool should determine how much the organization should care and why.
 
 See `docs/INTEGRATIONS.md` before implementing a scanner connector.
 
 ## Compliance note
 
-RiskBridge maps findings to relevant control families for context, but the remediation deadlines in `config/default.yaml`
+Riskbridge_tool maps findings to relevant control families for context, but the remediation deadlines in `config/default.yaml`
 are **organization policy**, not universal deadlines imposed by NIST, ISO, CIS, or every PCI environment. Organizations
 must configure their own approved remediation and exception policy.
 
 ## Important limitations
 
-- RiskBridge is decision support, not a guarantee that exploitation will or will not occur.
+- Riskbridge_tool is decision support, not a guarantee that exploitation will or will not occur.
 - EPSS estimates exploitation probability for published CVEs; it is not a business-risk score.
 - KEV confirms known exploitation but absence from KEV does not mean a vulnerability is safe.
 - The pre-CVE zero-day model measures **exposure**, not the probability that a particular unknown vulnerability exists.
-- Financial loss should not be invented. RiskBridge v0.3 optimizes risk points per remediation hour unless an organization
+- Financial loss should not be invented. Riskbridge_tool v0.3 optimizes risk points per remediation hour unless an organization
   later provides defensible cost/loss data.
 
 ## Tests
@@ -258,12 +258,12 @@ pip install -r requirements.txt
 macOS/Linux:
 
 ```bash
-PYTHONPATH=src python -m riskbridge.cli demo
+PYTHONPATH=src python -m Riskbridge_tool.cli demo
 ```
 
 Windows PowerShell:
 
 ```powershell
 $env:PYTHONPATH="src"
-python -m riskbridge.cli demo
+python -m Riskbridge_tool.cli demo
 ```
