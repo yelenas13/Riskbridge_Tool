@@ -1,0 +1,40 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "riskbridge"
+version = "0.3.0"
+description = "Explainable, business-aligned vulnerability and zero-day exposure prioritization"
+readme = "README.md"
+requires-python = ">=3.11"
+license = {text = "MIT"}
+authors = [{name = "RiskBridge Contributors"}]
+dependencies = [
+  "pandas>=2.1",
+  "numpy>=1.26",
+  "requests>=2.31",
+  "PyYAML>=6.0",
+  "openpyxl>=3.1",
+  "plotly>=5.20",
+  "streamlit>=1.40"
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0", "ruff>=0.6"]
+
+[project.scripts]
+riskbridge = "riskbridge.cli:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
