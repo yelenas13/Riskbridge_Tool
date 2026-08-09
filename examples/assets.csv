@@ -1,0 +1,6 @@
+asset_id,hostname,business_service,environment,criticality,data_sensitivity,revenue_impact,safety_impact,internet_exposed,privileged,network_reachability,identity_criticality,open_ports,public_api,remote_access,unsupported_software,technology_age_years,third_party_exposure,segmentation_effectiveness,edr_effectiveness,waf_effectiveness,least_privilege_effectiveness,monitoring_effectiveness
+A-001,vpn-gateway-01,Remote Access,production,5,4,5,3,true,true,5,4,8,false,true,false,4,true,2,4,1,2,4
+A-002,payments-api-01,Payments,production,5,5,5,2,true,false,4,2,5,true,false,false,3,true,3,4,4,3,4
+A-003,public-web-01,Customer Portal,production,4,3,4,1,true,false,3,1,6,true,false,false,2,true,4,4,5,4,4
+A-004,engineering-build-01,Build Platform,development,3,2,2,1,false,true,4,3,12,false,false,true,8,true,2,3,1,2,3
+A-005,identity-core-01,Identity,production,5,5,5,4,false,true,5,5,10,false,true,false,5,true,4,5,1,4,5

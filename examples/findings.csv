@@ -1,0 +1,5 @@
+finding_id,asset_id,cve_id,product,port,protocol,first_seen,remediation_hours,cvss_score,cvss_severity,epss,epss_percentile,known_exploited,published,exposure_hint
+F-00001,A-001,CVE-2021-44228,apache:log4j,443,tcp,2026-08-01,2.0,10.0,CRITICAL,0.94,0.999,true,2021-12-10T10:15:00Z,Network-reachable code-execution surface
+F-00002,A-002,CVE-2021-44228,apache:log4j,8443,tcp,2026-08-01,2.0,10.0,CRITICAL,0.94,0.999,true,2021-12-10T10:15:00Z,Network-reachable code-execution surface
+F-00003,A-003,CVE-2023-44487,nginx:nginx,443,tcp,2026-08-03,1.5,7.5,HIGH,0.34,0.88,true,2023-10-10T14:15:00Z,Network-facing service surface
+F-00004,A-004,CVE-2024-3094,xz:xz_utils,22,tcp,2026-08-04,3.0,10.0,CRITICAL,0.02,0.55,false,2024-03-29T17:15:00Z,Supply-chain / privileged service exposure

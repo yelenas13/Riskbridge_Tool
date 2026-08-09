@@ -1,0 +1,33 @@
+organization:
+  name: Example Organization
+  weekly_patch_capacity_hours: 16
+  sla_days:
+    P0: 1
+    P1: 7
+    P2: 30
+    P3: 90
+
+scoring:
+  weights:
+    technical: 0.20
+    threat: 0.30
+    business: 0.30
+    exposure: 0.20
+  # Controls can reduce the calculated score by at most 35%.
+  # This keeps compensating controls meaningful without allowing them to erase risk.
+  control_mitigation_cap: 0.35
+
+zero_day:
+  # Pre-CVE model: intentionally excludes CVSS, EPSS and KEV.
+  weights:
+    attack_surface: 0.25
+    privilege_reachability: 0.20
+    software_exposure: 0.20
+    business_impact: 0.25
+    control_weakness: 0.10
+
+framework_mappings:
+  NIST_SP_800_53_Rev5: [RA-5, SI-2]
+  ISO_IEC_27001_2022: [A.8.8]
+  PCI_DSS_4_0_1: [6.3.3]
+  CIS_Controls_v8: [7]
