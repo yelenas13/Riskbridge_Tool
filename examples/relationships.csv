@@ -1,0 +1,4 @@
+from_asset,to_asset,relationship
+A-001,A-005,remote-access-to-identity
+A-003,A-002,web-to-payments
+A-005,A-002,identity-to-payments

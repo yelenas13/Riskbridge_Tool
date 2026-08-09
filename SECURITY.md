@@ -1,16 +1,22 @@
 # Security Policy
 
-RiskBridge is a prioritization and decision-support tool. It is not a vulnerability scanner,
-exploit framework, or substitute for professional risk judgment.
+Riskbridge_Tool is a prioritization and decision-support application. It is not a vulnerability scanner, exploit framework, or substitute for professional engineering/risk judgment.
 
 ## Reporting a vulnerability
-
-Please report security issues privately to the repository owner rather than opening a public issue.
-Do not include production credentials, proprietary asset inventories, or sensitive scan exports in public issues.
+Report security issues privately to the repository owner rather than opening a public issue. Do not include production credentials, proprietary inventories, or sensitive scan exports in public issues.
 
 ## Data handling
+- Public-data mode uses NVD, FIRST EPSS, and CISA KEV only when live enrichment is requested.
+- Uploaded organization CSV/YAML data is processed by the running application.
+- Never commit real organization inventories, vulnerability exports, credentials, tokens, API keys, or generated reports to a public repository.
+- YAML is parsed with `safe_load`.
 
-- RiskBridge does not require credentials for its default public-data mode.
-- NVD, FIRST EPSS, and CISA KEV are queried only when live enrichment is enabled.
-- Organization CSV files are processed locally by the application.
-- Never commit real organization inventories or scanner exports to a public repository.
+## ML artifact safety
+Python pickle/joblib artifacts are executable serialization formats and must be treated as trusted code.
+
+- The public Streamlit UI **does not deserialize user-uploaded `.joblib` or `.pkl` models**.
+- The ML Lab trains a model from uploaded CSV observations inside the current session.
+- CLI model loading is intended only for model files controlled by the operator. Do not load an untrusted model file.
+
+## Defensive scope
+“Where to look” commands are inventory/verification commands. Riskbridge_Tool does not provide exploit execution or persistence capabilities.

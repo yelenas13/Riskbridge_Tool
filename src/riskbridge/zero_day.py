@@ -46,6 +46,44 @@ def _software_exposure(row: pd.Series | dict) -> float | None:
     )
 
 
+def zero_day_preparedness(row: pd.Series | dict) -> dict[str, Any]:
+    """Preparedness is separate from exposure: can the organization contain/recover quickly?"""
+    dimensions = {
+        "Isolation readiness": normalize_1_to_5(row.get("isolation_readiness")),
+        "Emergency patching": normalize_1_to_5(row.get("emergency_patching_readiness")),
+        "Recovery readiness": normalize_1_to_5(row.get("recovery_readiness")),
+        "Inventory accuracy": normalize_1_to_5(row.get("inventory_accuracy")),
+        "Telemetry readiness": normalize_1_to_5(row.get("telemetry_readiness")),
+        "Change flexibility": normalize_1_to_5(row.get("change_flexibility")),
+    }
+    weights = {name: 1 / len(dimensions) for name in dimensions}
+    score = weighted_average(dimensions, weights)
+    if score is None:
+        return {
+            "zero_day_preparedness_score": None,
+            "zero_day_preparedness_rating": "UNAVAILABLE",
+            "zero_day_preparedness_drivers": "Preparedness inputs not supplied",
+        }
+    score = round(clamp(score), 2)
+    if score >= 80:
+        rating = "STRONG"
+    elif score >= 60:
+        rating = "MODERATE"
+    elif score >= 40:
+        rating = "LIMITED"
+    else:
+        rating = "WEAK"
+    weakest = sorted(
+        [(name, value) for name, value in dimensions.items() if value is not None],
+        key=lambda pair: pair[1],
+    )[:3]
+    return {
+        "zero_day_preparedness_score": score,
+        "zero_day_preparedness_rating": rating,
+        "zero_day_preparedness_drivers": "; ".join(f"{name} {value:.0f}/100" for name, value in weakest),
+    }
+
+
 def zero_day_exposure(row: pd.Series | dict, config: dict) -> dict[str, Any]:
     """Pre-CVE exposure model. No CVSS, EPSS, KEV, or CVE is required."""
     attack = _attack_surface(row)
@@ -57,8 +95,13 @@ def zero_day_exposure(row: pd.Series | dict, config: dict) -> dict[str, Any]:
 
     weights = config.get("zero_day", {}).get(
         "weights",
-        {"attack_surface": 0.25, "privilege_reachability": 0.20, "software_exposure": 0.20,
-         "business_impact": 0.25, "control_weakness": 0.10},
+        {
+            "attack_surface": 0.25,
+            "privilege_reachability": 0.20,
+            "software_exposure": 0.20,
+            "business_impact": 0.25,
+            "control_weakness": 0.10,
+        },
     )
     score = weighted_average(
         {
@@ -89,9 +132,13 @@ def zero_day_exposure(row: pd.Series | dict, config: dict) -> dict[str, Any]:
     }
     drivers = sorted(
         [(name, value) for name, value in dimensions.items() if value is not None],
-        key=lambda pair: pair[1], reverse=True
+        key=lambda pair: pair[1],
+        reverse=True,
     )[:3]
     explanation = "; ".join(f"{name} {value:.0f}/100" for name, value in drivers)
+    preparedness = zero_day_preparedness(row)
+    prep_score = preparedness.get("zero_day_preparedness_score")
+    response_gap = round(max(0.0, score - float(prep_score)), 2) if prep_score is not None else None
 
     return {
         "zd_attack_surface": round(attack, 2) if attack is not None else None,
@@ -102,4 +149,6 @@ def zero_day_exposure(row: pd.Series | dict, config: dict) -> dict[str, Any]:
         "zero_day_exposure_score": score,
         "zero_day_exposure_rating": rating,
         "zero_day_drivers": explanation,
+        **preparedness,
+        "zero_day_response_gap": response_gap,
     }

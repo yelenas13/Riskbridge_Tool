@@ -1,67 +1,100 @@
-# RiskBridge Data Schema
+# RiskBridge v0.4 Data Schema
 
 ## Findings CSV
-
 Required:
-
-| Field | Meaning |
-|---|---|
-| `asset_id` | Asset identifier matching the asset inventory |
-| `cve_id` | CVE identifier |
-| `product` | Normalized product name |
+- `asset_id`
+- `cve_id`
 
 Recommended:
-
 - `finding_id`
+- `product` (`vendor:product` where possible)
+- `installed_version`
 - `port`
 - `protocol`
 - `first_seen`
 - `remediation_hours`
-- `cvss_score`
-- `cvss_severity`
-- `epss`
-- `epss_percentile`
-- `known_exploited`
-- `published`
-- `exposure_hint`
 
-If live enrichment is enabled, CVSS/EPSS/KEV fields can be populated from public sources. Existing organization-supplied
-values are preferred over public enrichment when present.
+Offline use may also provide CVSS/EPSS/KEV fields. With live enrichment, RiskBridge refreshes authoritative public intelligence when available.
 
-## Asset CSV
-
+## Asset inventory CSV
 Required:
-
 - `asset_id`
 - `hostname`
 
-Recommended 1-5 fields:
+Recommended business context:
+- `business_service`
+- `environment`
+- `criticality` (1-5)
+- `data_sensitivity` (1-5)
+- `revenue_impact` (1-5)
+- `safety_impact` (1-5)
+- `crown_jewel` (boolean)
 
-- `criticality`
-- `data_sensitivity`
-- `revenue_impact`
-- `safety_impact`
-- `network_reachability`
-- `identity_criticality`
+Applicability/inventory:
+- `asset_vendor`
+- `asset_product`
+- `asset_version`
+- `os_family`
+
+Exposure:
+- `internet_exposed`
+- `privileged`
+- `network_reachability` (1-5)
+- `identity_criticality` (1-5)
+- `open_ports`
+- `public_api`
+- `remote_access`
+- `unsupported_software`
+- `technology_age_years`
+- `third_party_exposure`
+
+Controls (1 weak → 5 strong):
 - `segmentation_effectiveness`
 - `edr_effectiveness`
 - `waf_effectiveness`
 - `least_privilege_effectiveness`
 - `monitoring_effectiveness`
 
-Recommended boolean/context fields:
+Zero-day preparedness (1 weak → 5 strong):
+- `isolation_readiness`
+- `emergency_patching_readiness`
+- `recovery_readiness`
+- `inventory_accuracy`
+- `telemetry_readiness`
+- `change_flexibility`
 
-- `environment`
-- `internet_exposed`
-- `privileged`
-- `public_api`
-- `remote_access`
-- `unsupported_software`
-- `third_party_exposure`
-- `open_ports`
-- `technology_age_years`
+## Relationships CSV — Attack-Path Lite
 
-### 1-5 convention
+```csv
+from_asset,to_asset,relationship
+A-001,A-005,remote-access-to-identity
+```
 
-`1` means low/weak and `5` means high/strong. For controls, a high number means a more effective control. For impact and
-reachability, a high number means greater impact/reach.
+The graph represents declared reachability/dependency only. It is not proof that a specific exploit path is traversable.
+
+## Vendor score CSV
+
+```csv
+cve_id,vendor,vendor_score,scale_max
+CVE-2024-XXXX,ScannerA,93,100
+CVE-2024-XXXX,ScannerB,8.4,10
+```
+
+These scores are compared for consensus/disagreement and are not silently blended into the RiskBridge score.
+
+## ML training CSV
+Required:
+- `observation_date`
+- `exploited_within_30d` (0/1)
+- `published`
+- `cvss_score`
+- `cvss_vector`
+- `cwe`
+- `epss`
+- `epss_percentile`
+
+Optional:
+- `epss_delta_7d`
+- `epss_delta_30d`
+
+Historical rows must be point-in-time snapshots to avoid leakage.

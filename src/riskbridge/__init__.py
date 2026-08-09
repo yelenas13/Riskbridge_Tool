@@ -1,3 +1,3 @@
-"""RiskBridge: explainable vulnerability and zero-day exposure prioritization."""
+"""RiskBridge: explainable cyber-risk decision support for known-CVE and pre-CVE exposure."""
 
-__version__ = "0.3.0"
+__version__ = "0.4.0"

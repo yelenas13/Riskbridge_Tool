@@ -11,29 +11,22 @@ CONFIG = {"zero_day": {"weights": {
 }}}
 
 
-def test_zero_day_model_does_not_need_cve_data():
+def test_zero_day_model_does_not_need_cve_data_and_has_preparedness():
     asset = pd.Series({
-        "environment": "production",
-        "criticality": 5,
-        "data_sensitivity": 5,
-        "revenue_impact": 5,
-        "safety_impact": 3,
-        "internet_exposed": True,
-        "privileged": True,
-        "network_reachability": 5,
-        "identity_criticality": 4,
-        "open_ports": 10,
-        "public_api": True,
-        "remote_access": True,
-        "unsupported_software": True,
-        "technology_age_years": 8,
-        "third_party_exposure": True,
-        "segmentation_effectiveness": 1,
-        "edr_effectiveness": 2,
-        "waf_effectiveness": 1,
-        "least_privilege_effectiveness": 2,
-        "monitoring_effectiveness": 2,
+        "environment": "production", "criticality": 5, "data_sensitivity": 5,
+        "revenue_impact": 5, "safety_impact": 3, "internet_exposed": True,
+        "privileged": True, "network_reachability": 5, "identity_criticality": 4,
+        "open_ports": 10, "public_api": True, "remote_access": True,
+        "unsupported_software": True, "technology_age_years": 8,
+        "third_party_exposure": True, "segmentation_effectiveness": 1,
+        "edr_effectiveness": 2, "waf_effectiveness": 1,
+        "least_privilege_effectiveness": 2, "monitoring_effectiveness": 2,
+        "isolation_readiness": 2, "emergency_patching_readiness": 2,
+        "recovery_readiness": 3, "inventory_accuracy": 4,
+        "telemetry_readiness": 3, "change_flexibility": 2,
     })
     result = zero_day_exposure(asset, CONFIG)
     assert result["zero_day_exposure_score"] >= 70
     assert result["zero_day_exposure_rating"] in {"HIGH", "CRITICAL"}
+    assert 0 <= result["zero_day_preparedness_score"] <= 100
+    assert "zero_day_response_gap" in result

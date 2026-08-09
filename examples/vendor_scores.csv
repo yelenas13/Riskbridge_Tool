@@ -1,0 +1,4 @@
+cve_id,vendor,vendor_score,scale_max
+CVE-2021-44228,ExampleScannerA,95,100
+CVE-2021-44228,ExampleScannerB,9.2,10
+CVE-2024-3094,ExampleScannerA,82,100
